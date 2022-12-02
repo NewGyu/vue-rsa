@@ -1,0 +1,3 @@
+<template>
+    applicant home
+</template>
