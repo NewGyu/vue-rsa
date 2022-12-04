@@ -1,3 +1,0 @@
-<template>
-    reviewer home
-</template>

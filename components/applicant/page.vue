@@ -1,3 +1,3 @@
 <template>
-    applicant home
+    <ApplicantForm />
 </template>
