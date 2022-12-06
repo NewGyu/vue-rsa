@@ -1,4 +1,5 @@
 import { subtle, getRandomValues } from "crypto";
+import { EncryptedStructure } from "../entities/SensitiveData";
 
 type Base64String = string;
 type Base64IV = string;
@@ -8,11 +9,6 @@ type PublicKey = CryptoKey;
 type EncryptedDataKey = Base64String;
 type EncryptedData = Base64String;
 
-export interface EncryptedStructure {
-    dek: EncryptedDataKey,
-    iv: Base64IV,
-    payload: EncryptedData
-}
 
 /**
  * This class focus on our encryption method

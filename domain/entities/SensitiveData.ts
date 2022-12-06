@@ -1,12 +1,9 @@
-type KekId = String;
-type DataKey = String;
-type EncryptedContent = String;
 type ClearText = String;
 
-interface EncryptedStructure {
-    kid: KekId,
-    dk: DataKey,
-    payload: EncryptedContent
+export interface EncryptedStructure {
+    dek: string, //encrypted and base64 encoded
+    iv: string,
+    payload: string
 }
 
 export type SensitiveData = EncryptedStructure | ClearText;
