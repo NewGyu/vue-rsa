@@ -5,9 +5,14 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest"
   },
   "devDependencies": {
     "nuxt": "3.0.0"
+  },
+  "dependencies": {
+    "@nuxt/test-utils-edge": "^3.0.1-rc.0-27837437.9c478ee",
+    "vitest": "^0.25.4"
   }
 }
