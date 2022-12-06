@@ -1,4 +1,5 @@
-import { subtle, getRandomValues } from "crypto";
+import crypto from "crypto";
+const jscrypto = globalThis.crypto ?? crypto;
 import { EncryptedStructure } from "../entities/SensitiveData";
 
 type Base64String = string;
@@ -65,7 +66,7 @@ export class Decrypter {
  */
 export namespace KeyEncryption {
     export async function generateKeyPair() {
-        return await subtle.generateKey(
+        return await jscrypto.subtle.generateKey(
             {
                 name: "RSA-OAEP",
                 modulusLength: 4096,
@@ -84,8 +85,8 @@ export namespace KeyEncryption {
      * @returns encrypted and base64 encoded format
      */
     export async function encrypt(dataKey: AESKey, key: PublicKey): Promise<EncryptedDataKey> {
-        const buff = await subtle.exportKey("raw", dataKey);
-        const encrypted = await subtle.encrypt(
+        const buff = await jscrypto.subtle.exportKey("raw", dataKey);
+        const encrypted = await jscrypto.subtle.encrypt(
             { name: "RSA-OAEP" },
             key,
             buff
@@ -101,7 +102,7 @@ export namespace KeyEncryption {
      */
     export async function decrypt(encryptedKey: EncryptedDataKey, key: PrivateKey): Promise<AESKey> {
         const encryptedBytes = B64ToByte(encryptedKey);
-        const decrypted = await subtle.decrypt(
+        const decrypted = await jscrypto.subtle.decrypt(
             { name: "RSA-OAEP" },
             key,
             encryptedBytes
@@ -110,7 +111,7 @@ export namespace KeyEncryption {
     }
 
     export async function exportKeyAsJwk(key: CryptoKey) {
-        return await subtle.exportKey("jwk", key);
+        return await jscrypto.subtle.exportKey("jwk", key);
     }
 
     export async function importKeyFromJwk(jwk: JsonWebKey) {
@@ -119,7 +120,7 @@ export namespace KeyEncryption {
         }
         const key_ops = jwk.key_ops! as KeyUsage[];
 
-        return await subtle.importKey(
+        return await jscrypto.subtle.importKey(
             "jwk",
             jwk,
             { name: "RSA-OAEP", hash: "SHA-256" },
@@ -134,7 +135,7 @@ export namespace KeyEncryption {
  */
 export namespace DataEncryption {
     export async function generateKey() {
-        return await subtle.generateKey(
+        return await jscrypto.subtle.generateKey(
             {
                 name: "AES-CBC",
                 length: 256
@@ -150,7 +151,7 @@ export namespace DataEncryption {
      * @returns byte array which is AES Key
      */
     export async function exportKeyAsBytes(key: AESKey): Promise<Uint8Array> {
-        return new Uint8Array(await subtle.exportKey("raw", key));
+        return new Uint8Array(await jscrypto.subtle.exportKey("raw", key));
     }
 
     /**
@@ -159,7 +160,7 @@ export namespace DataEncryption {
      * @returns AESKey object
      */
     export async function importKeyFrom(bytes: Uint8Array): Promise<AESKey> {
-        return await subtle.importKey(
+        return await jscrypto.subtle.importKey(
             "raw",
             bytes,
             "AES-CBC",
@@ -175,8 +176,8 @@ export namespace DataEncryption {
      * @returns encrypted bytes and initial vector
      */
     export async function encrypt(data: Uint8Array, key: AESKey): Promise<[ArrayBuffer, Uint8Array]> {
-        const iv = getRandomValues(new Uint8Array(16));
-        const encrypted = await subtle.encrypt(
+        const iv = jscrypto.getRandomValues(new Uint8Array(16));
+        const encrypted = await jscrypto.subtle.encrypt(
             { name: "AES-CBC", iv },
             key,
             data
@@ -193,7 +194,7 @@ export namespace DataEncryption {
     export async function decrypt(encryptedData: Base64String, key: AESKey, iv: Base64IV): Promise<Uint8Array> {
         const encryptedDataBytes = B64ToByte(encryptedData);
         const ivBytes = B64ToByte(iv);
-        const decrypted = await subtle.decrypt(
+        const decrypted = await jscrypto.subtle.decrypt(
             { name: "AES-CBC", iv: ivBytes },
             key,
             encryptedDataBytes
