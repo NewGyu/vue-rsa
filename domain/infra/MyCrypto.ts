@@ -108,6 +108,25 @@ export namespace KeyEncryption {
         );
         return await DataEncryption.importKeyFrom(new Uint8Array(decrypted));
     }
+
+    export async function exportKeyAsJwk(key: CryptoKey) {
+        return await subtle.exportKey("jwk", key);
+    }
+
+    export async function importKeyFromJwk(jwk: JsonWebKey) {
+        if (!(jwk.key_ops && jwk.key_ops.length === 1)) {
+            new Error("Unexpected key format.");
+        }
+        const key_ops = jwk.key_ops! as KeyUsage[];
+
+        return await subtle.importKey(
+            "jwk",
+            jwk,
+            { name: "RSA-OAEP", hash: "SHA-256" },
+            true,
+            key_ops
+        );
+    }
 }
 
 /**
