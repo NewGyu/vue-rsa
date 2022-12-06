@@ -9,3 +9,8 @@ export const useApplications = () => {
     const initial = demodata;
     return useState("applications", () => initial);
 }
+
+export const useKeyPair = () => {
+    const initial = { privateKey: "", publicKey: "" }
+    return useState("keyPair", () => initial);
+}
