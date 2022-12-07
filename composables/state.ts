@@ -1,13 +1,22 @@
-import { Application } from "@/domain/entities/Application"
+import { Application } from "@/domain/entities/Application";
+import { Encrypter, KeyEncryption } from "@/domain/infra/MyCrypto"
 
 export const useApplications = () => {
-    const demodata: Application[] = [
-        { name: "app1", public_data: "you can see1", sensitive_data: { kid: "key1", dk: "hoge", payload: "huga" } },
-        { name: "app2", public_data: "you can see2", sensitive_data: { kid: "key1", dk: "xxx", payload: "yyy" } },
-        { name: "app5", public_data: "you can see3", sensitive_data: { kid: "key2", dk: "333", payload: "uuuu" } }
-    ];
-    const initial = demodata;
-    return useState("applications", () => initial);
+    const initial = new Array<Application>();
+    const apps = useState("applications", () => initial);
+    const addNewApp = async (newApp: Application, publicKey: string) => {
+        const k = await KeyEncryption.importKeyFromJwk(JSON.parse(publicKey));
+        const encryptor = new Encrypter(k);
+        await encryptor.init();
+        const bytes = new TextEncoder().encode(newApp.sensitive_data as string);
+        const encrypted = await encryptor.encrypt(bytes);
+        newApp.sensitive_data = encrypted;
+        apps.value.push(newApp);
+    }
+    return {
+        apps,
+        addNewApp
+    }
 }
 
 export const useKeyPair = () => {

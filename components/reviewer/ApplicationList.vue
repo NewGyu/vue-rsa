@@ -8,7 +8,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="app in stored_applications">
+            <tr v-for="app in apps">
                 <td>{{ app.name }}</td>
                 <td>
                     <a class="button is-small" @click="emitShowDetail(app)">
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { Application } from "@/domain/entities/Application";
 
-const stored_applications = useApplications();
+const { apps } = useApplications();
 
 const emits = defineEmits(["selected"]);
 

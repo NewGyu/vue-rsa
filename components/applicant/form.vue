@@ -77,11 +77,11 @@ class NewApp implements Application {
 
 const newApp = ref(new NewApp());
 
-const stored_applications = useApplications();
+const { addNewApp } = useApplications();
 const keyPair = useKeyPair();
 
-function submitNew() {
-    stored_applications.value.push(newApp.value);
+async function submitNew() {
+    await addNewApp(newApp.value, keyPair.value.publicKey);
     newApp.value = new NewApp();
 }
 
