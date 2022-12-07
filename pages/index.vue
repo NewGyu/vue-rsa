@@ -1,7 +1,4 @@
 <template>
-    <NuxtLink to="keymanagement">
-        <button class="button">Key Management</button>
-    </NuxtLink>
     <div class="tile is-ancestor">
         <div class="tile is-parent">
             <article class="tile is-child box">
@@ -17,5 +14,14 @@
             </article>
         </div>
     </div>
+    <div>
+        <NuxtLink to="keymanagement">
+            <button class="button">Key Management</button>
+        </NuxtLink>
+    </div>
 </template>
 
+<script setup lang="ts">
+const keyPair = useKeyPair();
+
+</script>

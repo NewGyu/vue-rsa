@@ -11,14 +11,14 @@
             <div class="tile is-parent">
                 <article class="tile is-child box">
                     <h2 class="title">Private Key</h2>
-                    <textarea class="textarea" v-if="keyPair.privateKey">{{ keyPair.privateKey }}</textarea>
+                    <textarea class="textarea" rows="10" v-if="keyPair.privateKey">{{ keyPair.privateKey }}</textarea>
                     <div v-else="keyPair.privateKey">no data</div>
                 </article>
                 <article class="tile is-child box">
                     <h2 class="title">Public Key</h2>
                     <p v-if="keyPairState.publicKey">has been saved into state.</p>
                     <div v-if="keyPair.publicKey">
-                        <textarea class="textarea">{{ keyPair.publicKey }}</textarea>
+                        <textarea class="textarea" rows="10">{{ keyPair.publicKey }}</textarea>
                         <br />
                         <button class="button is-primary" @click="savePublicKey">Save for encryption</button>
                     </div>

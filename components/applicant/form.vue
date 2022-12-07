@@ -23,12 +23,23 @@
                 <button class="button" @click="clear">
                     Clear
                 </button>
-                <button class="button is-primary" :disabled="!newApp.isValid" @click="submitNew">
+                <button class="button is-primary" :disabled="(!newApp.isValid || !keyPair.publicKey)"
+                    @click="submitNew">
                     Submit new
                 </button>
             </div>
         </div>
     </section>
+    <section>
+        <p class="notification is-warning" v-if="!keyPair.publicKey">
+            "public key" has not been set to encrypt application.
+        </p>
+        <p v-else>
+            public key: <span id="public-key">{{ keyPair.publicKey.substring(0, 20) + " ..." }}</span> is used for
+            encryption.
+        </p>
+    </section>
+
 </template>
 
 <style>
@@ -38,6 +49,14 @@
 
 #submit>.control {
     text-align: right;
+}
+
+section {
+    margin-bottom: 0.5rem;
+}
+
+#public-key {
+    background-color: paleturquoise;
 }
 </style>
 
@@ -59,6 +78,7 @@ class NewApp implements Application {
 const newApp = ref(new NewApp());
 
 const stored_applications = useApplications();
+const keyPair = useKeyPair();
 
 function submitNew() {
     stored_applications.value.push(newApp.value);
